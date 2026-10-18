@@ -1,0 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createInventoryItem,dispensePrescription,medicinesOf} from './service.js';
+test('pharmacy reads either modern or legacy medicine lists',()=>{assert.equal(medicinesOf({medicines:[{medicine:'A'}]})[0].medicine,'A');assert.equal(medicinesOf({items:[{medicine:'B'}]})[0].medicine,'B')});
+test('dispensing preserves clinical details and records completion',()=>{const record={id:'RX-1',patient:'Demo',diagnosis:'Demo assessment',advice:'Demo advice',status:'pending',medicines:[{medicine:'A'}]};const rows=dispensePrescription([record],'RX-1');assert.equal(rows[0].status,'dispensed');assert.equal(rows[0].diagnosis,'Demo assessment');assert.ok(rows[0].dispensedAt);assert.throws(()=>dispensePrescription(rows,'RX-1'),/already been dispensed/)});
+test('inventory item validates count, MRP and date order',()=>{const form={name:'Demo Tablet',stock:'100',price:'85.50',mfgDate:'2026-01-01',expiry:'2027-01-01'};const item=createInventoryItem(form,[]);assert.equal(item.name,'Demo Tablet');assert.equal(item.stock,100);assert.equal(item.price,85.5);assert.throws(()=>createInventoryItem({...form,stock:'0'},[]),/tablet count/);assert.throws(()=>createInventoryItem({...form,expiry:'2025-01-01'},[]),/after/);assert.throws(()=>createInventoryItem(form,[item]),/already exists/)});

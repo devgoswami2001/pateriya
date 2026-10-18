@@ -1,0 +1,5 @@
+.desk-vitals-heading{display:flex;align-items:end;justify-content:space-between;border-top:1px solid #e5ebe6;margin-top:5px;padding-top:20px;color:#315c49}
+.desk-vitals-heading b{font-size:13px}.desk-vitals-heading span{font-size:10px;color:#8a998f;font-weight:400}
+.desk-vitals-intro{display:flex;flex-direction:column;background:#f3f7f3;border-radius:8px;padding:14px 16px;margin-bottom:20px!important}
+.desk-vitals-intro b{font-size:14px;color:#315642}.desk-vitals-intro span{font-size:11px;color:#849486;margin-top:3px}
+@media(max-width:520px){.desk-vitals-heading{align-items:start;flex-direction:column;gap:3px}.desk-form-grid{grid-template-columns:1fr}.desk-form-grid .full-row{grid-column:auto}}

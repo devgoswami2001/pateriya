@@ -1,0 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {addManualCollection,buildTransactions,inPeriod,totalOf} from './accounts.js';
+test('accounts separate clinic and pharmacy revenue',()=>{const appointments=[{id:'A1',patient:'Demo',status:'completed',date:'2026-10-18',fee:900}];const prescriptions=[{id:'R1',patient:'Demo',status:'dispensed',date:'2026-10-18',items:[{medicine:'Tablet A'}]}];const meds=[{name:'Tablet A',price:100}];const rows=buildTransactions(appointments,prescriptions,meds);assert.equal(rows.length,2);assert.equal(totalOf(rows),1000);assert.equal(rows.find(r=>r.source==='pharmacy').amount,100)});
+test('period filters support day month and year',()=>{assert.equal(inPeriod('2026-10-18','day','2026-10-18'),true);assert.equal(inPeriod('2026-10-01','month','2026-10-18'),true);assert.equal(inPeriod('2026-01-01','year','2026-10-18'),true);assert.equal(inPeriod('2025-10-18','year','2026-10-18'),false)});
+test('manual collections validate amount and note',()=>{const form={date:'2026-10-18',source:'clinic',amount:'500',note:'Demo payment'};const row=addManualCollection(form);assert.equal(row.amount,500);assert.throws(()=>addManualCollection({...form,amount:'0'}),/valid collection/);assert.throws(()=>addManualCollection({...form,note:' '}),/note/)});
